@@ -44,8 +44,4 @@ public class MealTo {
     public boolean isExcess() {
         return excess;
     }
-
-    public String getFormattedDateTime() {
-        return dateTime != null ? dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) : "";
-    }
 }

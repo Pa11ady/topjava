@@ -18,11 +18,12 @@ import static ru.javawebinar.topjava.util.MealsUtil.getMeals;
 
 public class MealServlet extends HttpServlet {
     private  static final Logger log = getLogger(MealServlet.class);
+    private static final int CALORIES_PER_DAY = 2000;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("redirect to meal");
-        List<MealTo> mealsTo = filteredByStreams(getMeals(), LocalTime.of(0, 0), LocalTime.of(23, 0), 2000);
+        List<MealTo> mealsTo = filteredByStreams(getMeals(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY);
         req.setAttribute("mealsTo", mealsTo);
         req.getRequestDispatcher("/meals.jsp").forward(req, resp);
     }
