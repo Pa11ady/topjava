@@ -3,11 +3,11 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -17,21 +17,29 @@ public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, Meal> mealsMap = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    @Override
-    public Meal save(Meal meal, int userId) {
-        if (meal.isNew()) {
-            meal.setId(counter.incrementAndGet());
-        } else if (!isOwner(meal.getUserId(), meal.getId())) {
-            return null;
-        }
-        mealsMap.put(meal.getId(), meal);
-        return meal;
-    }
+        @Override
+        public Meal save(Meal meal, int userId) {
+            if (meal.isNew()) {
+                meal.setId(counter.incrementAndGet());
+                meal.setUserId(userId);
+                Meal existing = mealsMap.putIfAbsent(meal.getId(), meal);
+                return existing == null ? meal : null;
+            } else {
+                Meal result = mealsMap.compute(meal.getId(), (id, existing) -> {
+                    if (existing == null || existing.getUserId() != userId) {
+                        return existing;
+                    }
+                    meal.setId(id);
+                    meal.setUserId(userId);
+                    return meal;
+                });
 
-    private boolean isOwner(int userId, int mealId) {
-        Meal meal = mealsMap.get(mealId);
-        return meal != null && userId == meal.getUserId();
-    }
+                if (result != null && result.getUserId() == userId && Objects.equals(result.getId(), meal.getId())) {
+                    return meal;
+                }
+                return null;
+            }
+        }
 
     @Override
     public boolean delete(int id, int userId) {
@@ -44,6 +52,11 @@ public class InMemoryMealRepository implements MealRepository {
             return null;
         }
         return mealsMap.get(id);
+    }
+
+    private boolean isOwner(int userId, int mealId) {
+        Meal meal = mealsMap.get(mealId);
+        return meal != null && userId == meal.getUserId();
     }
 
     @Override
