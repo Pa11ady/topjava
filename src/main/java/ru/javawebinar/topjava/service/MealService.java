@@ -16,8 +16,8 @@ public class MealService {
         this.repository = repository;
     }
 
-    public Meal save(Meal meal) {
-        Meal result = repository.save(meal);
+    public Meal save(Meal meal, int userId) {
+        Meal result = repository.save(meal, userId);
         if (result == null) {
             throw new NotFoundException("The food does not belong to the user or does not exist");
         }

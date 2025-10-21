@@ -35,19 +35,19 @@ public class MealRestController {
         return service.get(id, userId);
     }
 
-    public Meal create(Meal meal) {
-        int userId = SecurityUtil.authUserId();
+    public Meal create(Meal meal, int userId) {
+        //int userId = SecurityUtil.authUserId(); todo fix
         log.info("create {} for user {}", meal, userId);
         meal.setUserId(userId);
-        return service.save(meal);
+        return service.save(meal, userId);
     }
 
-    public Meal update(Meal meal, int id) {
-        int userId = SecurityUtil.authUserId();
+    public Meal update(Meal meal, int id, int userId) {
+        //int userId = SecurityUtil.authUserId(); todo fix
         log.info("update {} for user {}", meal, userId);
         meal.setId(id);
         meal.setUserId(userId);
-        return service.save(meal);
+        return service.save(meal, userId);
     }
 
     public void delete(int id) {
