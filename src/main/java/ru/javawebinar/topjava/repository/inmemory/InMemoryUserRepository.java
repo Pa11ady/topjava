@@ -9,16 +9,15 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
+    private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
     private final Map<Integer, User> usersMap = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
-    private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
 
     @Override
     public boolean delete(int id) {
@@ -55,7 +54,7 @@ public class InMemoryUserRepository implements UserRepository {
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
         return usersMap.values().stream()
-                .filter(user -> Objects.equals(user.getEmail(), email))
+                .filter(user -> email.equalsIgnoreCase(user.getEmail()))
                 .findAny()
                 .orElse(null);
     }
