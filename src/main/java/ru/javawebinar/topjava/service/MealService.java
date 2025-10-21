@@ -3,9 +3,10 @@ package ru.javawebinar.topjava.service;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.util.Collection;
+import java.util.List;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 
 @Service
 public class MealService {
@@ -16,30 +17,23 @@ public class MealService {
         this.repository = repository;
     }
 
-    public Meal save(Meal meal, int userId) {
-        Meal result = repository.save(meal, userId);
-        if (result == null) {
-            throw new NotFoundException("The food does not belong to the user or does not exist");
-        }
-        return result;
+    public Meal create(Meal meal, int userId) {
+        return repository.save(meal, userId);
     }
 
-    public boolean delete(int id, int userId) {
-        if (!repository.delete(id, userId)) {
-            throw new NotFoundException("The food does not belong to the user or does not exist");
-        }
-        return true;
+    public void update(Meal meal, int userId) {
+        checkNotFound(repository.save(meal, userId), meal.getId());
+    }
+
+    public void delete(int id, int userId) {
+        checkNotFound(repository.delete(id, userId), id);
     }
 
     public Meal get(int id, int userId) {
-        Meal result = repository.get(id, userId);
-        if (result == null) {
-            throw new NotFoundException("The food does not belong to the user or does not exist");
-        }
-        return result;
+        return checkNotFound(repository.get(id, userId), id);
     }
 
-    public Collection<Meal> getAll(int userId) {
+    public List<Meal> getAll(int userId) {
         return repository.getAll(userId);
     }
 }

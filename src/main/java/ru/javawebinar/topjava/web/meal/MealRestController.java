@@ -39,7 +39,7 @@ public class MealRestController {
         //int userId = SecurityUtil.authUserId(); todo fix
         log.info("create {} for user {}", meal, userId);
         meal.setUserId(userId);
-        return service.save(meal, userId);
+        return service.create(meal, userId);
     }
 
     public Meal update(Meal meal, int id, int userId) {
@@ -47,7 +47,7 @@ public class MealRestController {
         log.info("update {} for user {}", meal, userId);
         meal.setId(id);
         meal.setUserId(userId);
-        return service.save(meal, userId);
+        return service.create(meal, userId);
     }
 
     public void delete(int id) {
