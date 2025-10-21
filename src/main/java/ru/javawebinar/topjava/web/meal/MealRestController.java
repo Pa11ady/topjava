@@ -12,9 +12,12 @@ import ru.javawebinar.topjava.web.SecurityUtil;
 import java.util.Collection;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkIsNew;
+
 @Controller
 public class MealRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
     private final MealService service;
 
     public MealRestController(MealService service) {
@@ -35,15 +38,16 @@ public class MealRestController {
         return service.get(id, userId);
     }
 
-    public Meal create(Meal meal, int userId) {
-        //int userId = SecurityUtil.authUserId(); todo fix
+    public Meal create(Meal meal) {
+        checkIsNew(meal);
+        int userId = SecurityUtil.authUserId();
         log.info("create {} for user {}", meal, userId);
-        meal.setUserId(userId);
         return service.create(meal, userId);
     }
 
-    public Meal update(Meal meal, int id, int userId) {
-        //int userId = SecurityUtil.authUserId(); todo fix
+    public Meal update(Meal meal, int id) {
+        assureIdConsistent(meal, id);
+        int userId = SecurityUtil.authUserId();
         log.info("update {} for user {}", meal, userId);
         meal.setId(id);
         meal.setUserId(userId);
