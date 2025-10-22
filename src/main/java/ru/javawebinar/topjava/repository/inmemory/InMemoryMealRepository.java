@@ -22,11 +22,9 @@ public class InMemoryMealRepository implements MealRepository {
                     uId -> new ConcurrentHashMap<>());
             if (meal.isNew()) {
                 meal.setId(counter.incrementAndGet());
-                meal.setUserId(userId);
                 Meal existing = userMeals.putIfAbsent(meal.getId(), meal);
                 return existing == null ? meal : null;
             }
-            meal.setUserId(userId);
             return userMeals.replace(meal.getId(), meal) != null ? meal : null;
         }
 

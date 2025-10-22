@@ -14,8 +14,6 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.MealsUtil.USER_ID;
-
 public class SpringMain {
     public static void main(String[] args) {
         // java 7 automatic resource management (ARM)
@@ -24,8 +22,8 @@ public class SpringMain {
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ADMIN));
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-            mealRestController.create(new Meal(LocalDateTime.of(2025, Month.JANUARY, 30, 10, 0), "Завтрак", 500, USER_ID));
-            mealRestController.create(new Meal(LocalDateTime.of(2025, Month.JANUARY, 30, 14, 0), "Обед", 1500, USER_ID));
+            mealRestController.create(new Meal(LocalDateTime.of(2025, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
+            mealRestController.create(new Meal(LocalDateTime.of(2025, Month.JANUARY, 30, 14, 0), "Обед", 1500));
             List<MealTo> result = mealRestController.getAll();
             System.out.println(result);
         }
