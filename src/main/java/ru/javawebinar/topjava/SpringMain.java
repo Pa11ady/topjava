@@ -5,14 +5,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
-import java.util.List;
 
 public class SpringMain {
     public static void main(String[] args) {
@@ -24,8 +23,16 @@ public class SpringMain {
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
             mealRestController.create(new Meal(LocalDateTime.of(2025, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
             mealRestController.create(new Meal(LocalDateTime.of(2025, Month.JANUARY, 30, 14, 0), "Обед", 1500));
-            List<MealTo> result = mealRestController.getAll();
-            System.out.println(result);
+            System.out.println(mealRestController.getAll());
+            System.out.println("*******");
+            System.out.println(mealRestController.getBetween(null, null, null, null));
+            System.out.println("*******");
+            MealRepository mealRepository = appCtx.getBean(MealRepository.class);
+            System.out.println(mealRepository.delete(123, 1));
+            System.out.println(mealRepository.delete(1, 123));
+            System.out.println(mealRepository.delete(1, 1));
+            System.out.println("*******");
+            System.out.println(mealRestController.getAll());
         }
     }
 }
