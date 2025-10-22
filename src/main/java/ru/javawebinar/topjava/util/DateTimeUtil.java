@@ -11,6 +11,10 @@ public class DateTimeUtil {
         return !lt.isBefore(startTime) && lt.isBefore(endTime);
     }
 
+    public static boolean isBetweenHalfOpen(LocalDateTime value, LocalDateTime start, LocalDateTime end) {
+        return (start == null || !value.isBefore(start)) && (end == null || value.isBefore(end));
+    }
+
     public static String toString(LocalDateTime ldt) {
         return ldt == null ? "" : ldt.format(DATE_TIME_FORMATTER);
     }

@@ -4,7 +4,10 @@ import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 
@@ -35,5 +38,15 @@ public class MealService {
 
     public List<Meal> getAll(int userId) {
         return repository.getAll(userId);
+    }
+
+    public List<Meal> getBetween(LocalDate startDate, LocalDate endDate, int userId) {
+        LocalDateTime start = Optional.ofNullable(startDate)
+                .map(LocalDate::atStartOfDay)
+                .orElse(LocalDateTime.MIN);
+        LocalDateTime end = Optional.ofNullable(endDate)
+                .map(date -> date.plusDays(1).atStartOfDay())
+                .orElse(LocalDateTime.MAX);
+        return repository.getBetweenHalfOpen(start, end, userId);
     }
 }
