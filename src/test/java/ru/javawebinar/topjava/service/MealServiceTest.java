@@ -40,8 +40,8 @@ public class MealServiceTest {
 
     @Test
     public void get() {
-        Meal meal = service.get(MEAL0.getId(), USER_ID);
-        assertMatch(meal, MEAL0);
+        Meal meal = service.get(meal0.getId(), USER_ID);
+        assertMatch(meal, meal0);
     }
 
     @Test
