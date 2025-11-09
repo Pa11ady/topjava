@@ -1,5 +1,9 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,9 +25,12 @@ import java.time.LocalTime;
                 query = "SELECT m FROM Meal m WHERE m.user.id =:userId AND m.dateTime >=:startDateTime AND " +
                         "m.dateTime <:endDateTime ORDER BY m.dateTime DESC ")
 })
-@Table(name = "meal")
+@Table(name = "meal", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meal_unique_user_datetime_idx")
+})
 public class Meal extends AbstractBaseEntity {
     @Column(name = "date_time", nullable = false)
+    @NotNull
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
@@ -32,9 +39,12 @@ public class Meal extends AbstractBaseEntity {
     private String description;
 
     @Column(name = "calories", nullable = false)
+    @Range(min = 10, max = 5000)
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private User user;
 
