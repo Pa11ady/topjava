@@ -43,9 +43,11 @@ public class MealServiceTest {
         protected void finished(long nanos, Description description) {
             String result = String.format("\n%-20s %7d", description.getMethodName(),
                     TimeUnit.NANOSECONDS.toMillis(nanos));
+            log.info(result + " \n");
             statistic.append(result);
         }
     };
+
     @Autowired
     private MealService service;
 
@@ -130,7 +132,6 @@ public class MealServiceTest {
 
     @AfterClass
     public static void printStatistic() {
-        log.info("\n================================");
-        log.info(statistic.toString());
+        log.info("\n================================\n" + statistic);
     }
 }
