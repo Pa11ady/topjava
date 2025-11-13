@@ -11,7 +11,13 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
-    List<Meal> findByUserIdOrderByDateTimeDesc(int userId);
+    @Query("""
+            SELECT m
+            FROM Meal m
+            WHERE m.user.id=?1
+            ORDER BY m.dateTime DESC
+            """)
+    List<Meal> getAll(int userId);
 
     @Query("""
             SELECT m
@@ -25,5 +31,10 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     @Modifying
     @Transactional
-    int deleteByIdAndUserId(int id, int userId);
+    @Query("""
+            DELETE
+            FROM Meal m
+            WHERE m.id = ?1 AND m.user.id = ?2
+            """)
+    int delete(int id, int userId);
 }

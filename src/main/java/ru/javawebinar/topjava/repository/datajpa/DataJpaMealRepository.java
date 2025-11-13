@@ -22,10 +22,8 @@ public class DataJpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-        if (!meal.isNew()) {
-            if (get(meal.id(), userId) == null) {
-                return null;
-            }
+        if (!meal.isNew() && (get(meal.id(), userId) == null)) {
+            return null;
         }
         meal.setUser(crudUserRepository.getReferenceById(userId));
         return crudMealRepository.save(meal);
@@ -33,18 +31,18 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-        return crudMealRepository.deleteByIdAndUserId(id, userId) != 0;
+        return crudMealRepository.delete(id, userId) != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = crudMealRepository.findById(id).orElse(null);
-        return meal != null && meal.getUser() != null && meal.getUser().getId() == userId ? meal : null;
+        return crudMealRepository.findById(id)
+                .filter(meal -> meal.getUser().getId() == userId).orElse(null);
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return crudMealRepository.findByUserIdOrderByDateTimeDesc(userId);
+        return crudMealRepository.getAll(userId);
     }
 
     @Override
