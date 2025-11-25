@@ -1,15 +1,15 @@
 package ru.javawebinar.topjava.service.jdbc;
 
-import org.junit.Assume;
+import org.junit.Ignore;
 import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
 
 import static ru.javawebinar.topjava.Profiles.JDBC;
 
 @ActiveProfiles(JDBC)
+@Ignore("Not supported for JDBC")
 public class JdbcUserServiceTest extends AbstractUserServiceTest {
     @Override
-    public void createWithException() throws Exception {
-        Assume.assumeTrue("Not supported for JDBC", true);
+    public void createWithException() {
     }
 }
