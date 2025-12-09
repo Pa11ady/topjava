@@ -43,34 +43,18 @@ class MealRestControllerTest extends AbstractControllerTest {
         int newId = created.getId();
         newMeal.setId(newId);
 
-        assertThat(created)
-                .usingRecursiveComparison()
-                .ignoringFields("user")
-                .isEqualTo(newMeal);
-
+        MEAL_MATCHER.assertMatch(created, newMeal);
         Meal dbMeal = mealService.get(newId, USER_ID);
-        assertThat(dbMeal)
-                .usingRecursiveComparison()
-                .ignoringFields("user")
-                .isEqualTo(newMeal);
+        MEAL_MATCHER.assertMatch(dbMeal, newMeal);
     }
 
     @Test
     void get() throws Exception {
-        String response = perform(MockMvcRequestBuilders.get(REST_URL + MEAL1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + MEAL1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        Meal actual = JsonUtil.readValue(response, Meal.class);
-
-        assertThat(actual)
-                .usingRecursiveComparison()
-                .ignoringFields("user")
-                .isEqualTo(meal1);
+                .andExpect(MEAL_MATCHER.contentJson(meal1));
     }
 
     @Test
@@ -89,11 +73,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         Meal dbMeal = mealService.get(MEAL1_ID, USER_ID);
-
-        assertThat(dbMeal)
-                .usingRecursiveComparison()
-                .ignoringFields("user")
-                .isEqualTo(updated);
+        MEAL_MATCHER.assertMatch(dbMeal, updated);
     }
 
     @Test
@@ -113,7 +93,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void getBetween() throws Exception {
         String url_part = "between?startDateTime=2020-01-30T07:00&endDateTime=2020-01-31T11:00:00";
-        String response = perform(MockMvcRequestBuilders.get(REST_URL +  url_part))
+        String response = perform(MockMvcRequestBuilders.get(REST_URL + url_part))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn()
