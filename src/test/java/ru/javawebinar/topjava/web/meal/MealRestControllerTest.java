@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -92,8 +93,11 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetween() throws Exception {
-        String url_part = "between?startDateTime=2020-01-30T07:00&endDateTime=2020-01-31T11:00:00";
-        String response = perform(MockMvcRequestBuilders.get(REST_URL + url_part))
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(REST_URL + "between")
+                .param("startDateTime", "2020-01-30T07:00")
+                .param("endDateTime", "2020-01-31T11:00:00");
+
+        String response = perform(request)
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn()

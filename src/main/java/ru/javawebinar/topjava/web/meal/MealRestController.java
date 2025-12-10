@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping(value = "/rest/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealRestController extends AbstractMealController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal>  createWithUrl(@RequestBody Meal meal) {
+    public ResponseEntity<Meal> createWithLocation(@RequestBody Meal meal) {
         Meal created = super.create(meal);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
